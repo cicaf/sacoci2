@@ -13,14 +13,14 @@ jobs:
     - image: circleci/node:13.8.0
 
   steps:
-    - run: echo "Hello World" > output.txt
+    - run: echo "Hello World" > ~/output.txt
 
     #USING WORKSPACES HERE...TO PERSIST OUR DATA.
     - persist_to_workspace:
     #MUST BE ABSOLUTE OR RELATIVE PATH FROM WORKING DIRECTORY,IS A DIRECTORY ON THE CONTAINER WHICH IS TAKEN TO BE THE ROOT DIRECTORY OF THE WORKSPACE
-        root: /tmp/output.txt
+        root: ~/
         paths:
-          - ""
+          - output.txt
 
 
   print_output_file:
@@ -29,16 +29,15 @@ jobs:
 
    steps:
      - attach_workspace:
-       at: /tmp/output.txt
+       at: ~/
 
-     - run: cat output.txt
+     - run: cat ~/output.txt
 
 workflows:
 #NAME THE WORKFLOW WELCOME.
- welcome:
+  my_workflow:
  #RUN THE WELCOME/RUN JOB IN ITS OWN CONTAINER.
    jobs:
-     - welcome/run
      - save_hello_world_output
      - print_output_file:
          requires:
